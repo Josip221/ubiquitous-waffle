@@ -58,7 +58,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "Project1",
+        "title": "Tauri App",
         "width": 800
       }
     ]

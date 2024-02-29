@@ -1,17 +1,24 @@
+<script>
+	import { invoke } from '@tauri-apps/api/tauri'
+</script>
+
+
 <style>
 	.container {
-		font-family: Arial, Helvetica, sans-serif;
 		width: 100%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: cadetblue;
+		flex-direction: column;
+		gap: 10px;
+		
 	}
 	.heading {
-		color: red;
+		color: white;
 	}
 </style>
 
 <div class="container">
 	<h1 class="heading">Tauri app test</h1>
+	<button on:click={() => invoke('test_function', {message: "hello from backend"})}>Invoke</button>
 </div>
