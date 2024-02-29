@@ -3,7 +3,7 @@
 
 use std::fs;
 use serde::Serialize;
-
+use std::time::{SystemTime, UNIX_EPOCH};
 
 
 #[derive(Debug, Serialize)]
@@ -15,14 +15,22 @@ struct DirInfo {
     created: u64,
     modified: u64,
     // permissions: u32,
+}
 
+fn get_current_time(time: SystemTime) -> u64 {
+    
+    let duration_since_epoch = match time.duration_since(UNIX_EPOCH) {
+        Ok(duration) => duration.as_secs(),
+        Err(_) => panic!("SystemTime before UNIX EPOCH!"),
+    };
+    duration_since_epoch
 }
 
 #[tauri::command]
 fn get_current_dir() -> Vec<DirInfo> {
-   let current_dir = std::env::current_dir().expect("Failed to get current directory");
+    let current_dir = std::env::current_dir().expect("Failed to get current directory");
 
-     let mut dir_info_vec: Vec<DirInfo> = Vec::new();
+    let mut dir_info_vec: Vec<DirInfo> = Vec::new();
 
     // List contents of the current directory
     if let Ok(entries) = fs::read_dir(&current_dir) {
@@ -36,8 +44,8 @@ fn get_current_dir() -> Vec<DirInfo> {
                     size: metadata.len(),
                     is_dir: metadata.is_dir(),
                     is_file: metadata.is_file(),
-                    created: metadata.created().unwrap().elapsed().unwrap().as_secs(),
-                    modified: metadata.modified().unwrap().elapsed().unwrap().as_secs(),
+                    created: get_current_time(metadata.created().unwrap()),
+                    modified: get_current_time(metadata.modified().unwrap()),
                     // permissions: metadata.permissions().mode(),
                 };
 
